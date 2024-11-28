@@ -13,6 +13,24 @@ const {
   generatedTimeEveryAfterEveryOneMinbyCrown,
 } = require("./controller/INRGateway");
 const sequelize = require("./config/seq.config");
+const {
+  jobRunByCrone,
+  generatedTimeEveryAfterEveryOneMin,
+  rouletteResult,
+} = require("./gameTimeController");
+const {
+  aviator_Start_function,
+} = require("./gameTimeController/aviator_Start_function");
+const {
+  sendGaziyabadAmountToTheAdmin,
+  sendFaridabadAmountToTheAdmin,
+  sendGaliAmountToTheAdmin,
+  sendDisawarAmountToTheAdmin,
+  sendRouletteAmountToTheAdmin,
+  sendWingoAmountToTheAdmin,
+  sendWingoAmountToTheAdminThreeMin,
+  sendWingoAmountToTheAdminFiveMin,
+} = require("./gameTimeController/adminresult");
 
 const io = new Server(httpServer, {
   cors: {
@@ -46,12 +64,37 @@ if (x) {
     secondsUntilNextMinute
   );
   setTimeout(() => {
-    // generatedTimeEveryAfterEveryOneMinTRX(io);
-    // generatedTimeEveryAfterEveryOneMin(io);
+    jobRunByCrone();
+    generatedTimeEveryAfterEveryOneMin(io);
+    // rouletteResult5Star(io);
     x = false;
   }, secondsUntilNextMinute * 1000);
 }
-generatedTimeEveryAfterEveryOneMinbyCrown();
+
+aviator_Start_function(io);
+rouletteResult(io);
+
+setInterval(() => {
+  sendGaziyabadAmountToTheAdmin(io);
+  sendFaridabadAmountToTheAdmin(io);
+  sendGaliAmountToTheAdmin(io);
+  sendDisawarAmountToTheAdmin(io);
+}, 5 * 60 * 1000);
+
+setInterval(() => {
+  sendRouletteAmountToTheAdmin(io);
+}, 5000);
+setInterval(() => {
+  sendWingoAmountToTheAdmin(io);
+}, 5000);
+setInterval(() => {
+  sendWingoAmountToTheAdminThreeMin(io);
+}, 10000);
+setInterval(() => {
+  sendWingoAmountToTheAdminFiveMin(io);
+}, 15000);
+
+// generatedTimeEveryAfterEveryOneMinbyCrown();
 app.get("/", (req, res) => {
   res.status(200).json({
     msg: "Server is running on port 2343",

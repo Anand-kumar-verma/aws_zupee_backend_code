@@ -169,8 +169,24 @@ const {
   inrPayOutRequest,
   manuallyApprovePayinByAdmin,
 } = require("../controller/INRGateway");
+const {
+  betPlacedAviator,
+  cashOutFunction,
+  getGameHistoryAviator,
+  getLederData,
+  getWalletByUserId,
+  getMyHistoryByID,
+  getTopRecordsAviator,
+} = require("../gameTimeController/aviator_Start_function");
 const router = express.Router();
-
+// aviator game
+router.post("/apply-bet-aviator-first", betPlacedAviator);
+router.post("/cash-out-aviator-last", cashOutFunction);
+router.get("/get-game-history", getGameHistoryAviator);
+router.get("/get-ledger-data", getLederData);
+router.post("/get-wallet-amount-by-id", getWalletByUserId);
+router.post("/my-history-by-user-id", getMyHistoryByID);
+router.get("/get-top-users", getTopRecordsAviator);
 ////////// trx ///////////////////
 router.get("/trx-auto-genrated-result", authCheck, getGameHistory);
 router.get("/trx-auto-genrated-result-tc", getGameHistoryTC);
@@ -516,16 +532,6 @@ router.post(
 
 // new api's
 router.post("/update-user-name", authCheckAdmin, updateUserName);
-
-
-
-
-
-
-
-
-
-
 
 ///////////////////////
 module.exports = router;
