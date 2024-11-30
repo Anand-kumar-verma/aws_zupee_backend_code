@@ -41,7 +41,6 @@ exports.jobRunByCrone = async () => {
       []
     );
     let time_to_Tron = getTime?.[0]?.utc_time;
-    console.log(time_to_Tron);
     setTimeout(async () => {
       if (
         Number(moment(getTime?.[0]?.created_at_utc)?.format("HH")) % 6 === 0 &&
