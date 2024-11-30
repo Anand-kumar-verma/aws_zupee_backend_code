@@ -427,10 +427,10 @@ exports.cashOutFunction = async (req, res) => {
           input_output.emit("user_bet_cashout", {
             id: u_id,
             multiplier: time,
-            amountcashed: result?.[1]?.[0]?.["@amount_cras"],
+            amountcashed: result?.[0]?.["@amount_cras"],
           });
         return res.status(200).json({
-          msg: result?.[1]?.[0]?.["@result_msg"],
+          msg: result?.[0]?.["@result_msg"],
           time: time,
         });
       })
