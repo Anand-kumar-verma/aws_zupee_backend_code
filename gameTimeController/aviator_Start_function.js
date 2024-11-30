@@ -358,26 +358,27 @@ exports.betPlacedAviator = async (req, res) => {
     total_bet_place_temp = total_bet_place_temp + spnt_amount;
     total_candidate = total_candidate + 1;
     const query_for_bet_place =
-      "CALL `sp_place_bet_aviator`(?,?,?,?,@result_msg,@email_to_be_sent_out); SELECT @result_msg,@email_to_be_sent_out;";
+      "CALL `sp_place_bet_aviator`(?,?,?,?,@result_msg,@email_to_be_sent_out);";
     const params = [
       String(u_id),
       String(Date.now()),
       String(spnt_amount),
       button_type,
     ];
-    await queryDb(query_for_bet_place, params)
+    await queryDb(query_for_bet_place, params);
+    await queryDb("SELECT @result_msg,@email_to_be_sent_out;", [])
       ?.then((result) => {
         input_output &&
           input_output.emit("user_bet", {
             id: u_id,
-            email: result?.[1]?.[0]?.["@email_to_be_sent_out"] || "***",
+            email: result?.[0]?.["@email_to_be_sent_out"] || "***",
             amount: spnt_amount,
             timestamp: moment(Date.now())?.format("YYYY-MM-DD HH:mm:ss"),
             multiplier: 0,
             amountcashed: 0,
           });
         return res.status(200).json({
-          msg: result?.[1]?.[0]?.["@result_msg"],
+          msg: result?.[0]?.["@result_msg"],
         });
       })
       .catch((e) => {
@@ -412,14 +413,15 @@ exports.cashOutFunction = async (req, res) => {
         time: time,
       });
     const query_for_cash_out =
-      "CALL sp_clear_bet_aviator(?,?,?,?,@result_msg,@amount_cras); SELECT @result_msg,@amount_cras;";
+      "CALL sp_clear_bet_aviator(?,?,?,?,@result_msg,@amount_cras);";
     const params = [
       String(u_id),
       String(Date.now()),
       Number(time),
       button_type,
     ];
-    await queryDb(query_for_cash_out, params)
+    await queryDb(query_for_cash_out, params);
+    await queryDb("SELECT @result_msg,@amount_cras;", [])
       .then((result) => {
         input_output &&
           input_output.emit("user_bet_cashout", {
