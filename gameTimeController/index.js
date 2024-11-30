@@ -80,7 +80,6 @@ async function callTronAPISecond(time_to_Tron, time) {
       }
     )
     .then(async (result) => {
-      console.log(result);
       if (result?.data?.data?.[0]) {
         recurstionCount = 0;
         const obj = result?.data?.data?.[0];
@@ -91,7 +90,6 @@ async function callTronAPISecond(time_to_Tron, time) {
           [String(obj?.number), String(time_to_Tron)]
         );
       } else {
-        console.log("recursion called", time_to_Tron, result?.data?.data);
         setTimeout(async () => {
           await callTronAPISecond(time_to_Tron, time);
         }, 1500);
