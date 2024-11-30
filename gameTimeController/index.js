@@ -31,15 +31,17 @@ exports.generatedTimeEveryAfterEveryOneMinTRX = (io) => {
   });
 };
 exports.jobRunByCrone = async () => {
+  console.log("functoin called");
   schedule.schedule("54 * * * * *", async function () {
     const actualtome = soment.tz("Asia/Kolkata");
     const time = actualtome;
     // .add(5, "hours").add(30, "minutes").valueOf();
-    const w = await queryDb(
+    const getTime = await queryDb(
       "SELECT `utc_time`,block_id,created_at_utc FROM `trx_UTC_timer` ORDER BY `id` DESC LIMIT 1;",
       []
     );
     let time_to_Tron = getTime?.[0]?.utc_time;
+    console.log(time_to_Tron);
     setTimeout(async () => {
       if (
         Number(moment(getTime?.[0]?.created_at_utc)?.format("HH")) % 6 === 0 &&
@@ -79,6 +81,7 @@ async function callTronAPISecond(time_to_Tron, time) {
       }
     )
     .then(async (result) => {
+      console.log(result);
       if (result?.data?.data?.[0]) {
         recurstionCount = 0;
         const obj = result?.data?.data?.[0];
@@ -192,7 +195,6 @@ exports.rouletteResult = (io) => {
       if (second === 0) {
         second = 59;
         io.emit("rolletresult", resultToBeSend);
-        console.log(resultToBeSend);
         io.emit("rolletresult_5star", resultToBeSend_5Start);
         job?.cancel();
         job?.cancel();
